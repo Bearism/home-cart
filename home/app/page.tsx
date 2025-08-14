@@ -1,6 +1,5 @@
 import Image from "next/image";
 
-// Sample product data for showcase
 const products = [
   {
     id: 1,
@@ -64,7 +63,6 @@ const products = [
   }
 ];
 
-// Star rating component
 const StarRating = ({ rating }: { rating: number }) => {
   return (
     <div className="flex items-center gap-1">
@@ -83,14 +81,11 @@ const StarRating = ({ rating }: { rating: number }) => {
   );
 };
 
-// Product card component
 const ProductCard = ({ product }: { product: typeof products[0] }) => {
   return (
     <div className="product-card group bg-card-bg border border-card-border rounded-2xl p-6 hover:border-accent/50 overflow-hidden relative">
-      {/* Gradient overlay on hover */}
       <div className="absolute inset-0 bg-gradient-to-br from-accent/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
       
-      {/* Image container */}
       <div className="relative mb-4 overflow-hidden rounded-xl">
         <Image
           src={product.image}
@@ -99,7 +94,6 @@ const ProductCard = ({ product }: { product: typeof products[0] }) => {
           height={300}
           className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
         />
-        {/* Category badge */}
         <div className="absolute top-3 left-3">
           <span className="px-3 py-1 bg-black/50 backdrop-blur-sm text-white text-xs font-medium rounded-full">
             {product.category}
@@ -107,7 +101,6 @@ const ProductCard = ({ product }: { product: typeof products[0] }) => {
         </div>
       </div>
 
-      {/* Product info */}
       <div className="relative z-10">
         <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-accent transition-colors">
           {product.name}
@@ -122,7 +115,6 @@ const ProductCard = ({ product }: { product: typeof products[0] }) => {
           {product.reviews.toLocaleString()} reviews
         </p>
 
-        {/* Features list */}
         <div className="mb-4">
           <div className="flex flex-wrap gap-1">
             {product.features.map((feature, index) => (
@@ -141,54 +133,7 @@ const ProductCard = ({ product }: { product: typeof products[0] }) => {
   );
 };
 
-// Design showcase section
-const DesignShowcase = () => (
-  <section className="py-16 border-t border-card-border">
-    <div className="container mx-auto px-4">
-      <div className="text-center mb-12">
-        <h2 className="text-3xl font-bold text-white mb-4">
-          Design <span className="gradient-text">Features</span>
-        </h2>
-        <p className="text-gray-400 max-w-2xl mx-auto">
-          This case study demonstrates modern UI/UX principles including responsive design, 
-          gradient effects, and interactive components.
-        </p>
-      </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div className="glass p-6 rounded-2xl text-center">
-          <div className="w-16 h-16 bg-gradient-to-r from-accent to-accent-hover rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
-            </svg>
-          </div>
-          <h3 className="text-xl font-semibold text-white mb-2">Responsive Design</h3>
-          <p className="text-gray-400">Adapts seamlessly across all device sizes with mobile-first approach</p>
-        </div>
-        
-        <div className="glass p-6 rounded-2xl text-center">
-          <div className="w-16 h-16 bg-gradient-to-r from-accent to-accent-hover rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM21 5a2 2 0 00-2-2h-4a2 2 0 00-2 2v12a4 4 0 004 4h4a2 2 0 002-2V5z" />
-            </svg>
-          </div>
-          <h3 className="text-xl font-semibold text-white mb-2">Modern UI</h3>
-          <p className="text-gray-400">Dark theme with gradient effects and glass morphism design</p>
-        </div>
-        
-        <div className="glass p-6 rounded-2xl text-center">
-          <div className="w-16 h-16 bg-gradient-to-r from-accent to-accent-hover rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-            </svg>
-          </div>
-          <h3 className="text-xl font-semibold text-white mb-2">Interactive Elements</h3>
-          <p className="text-gray-400">Smooth animations and hover effects for enhanced user experience</p>
-        </div>
-      </div>
-    </div>
-  </section>
-);
+
 
 export default function Home() {
   return (
@@ -211,13 +156,18 @@ export default function Home() {
               <span className="text-white">Showcase</span>
             </h1>
             <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
-              A modern, dark-themed product showcase demonstrating responsive design, 
-              gradient effects, and interactive UI components built with Next.js and Tailwind CSS.
+              Discover our collection of premium tech products with cutting-edge features and stunning design.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="px-8 py-4 bg-gradient-to-r from-accent to-accent-hover text-white font-semibold rounded-xl hover:scale-105 transition-transform duration-300">
-                View Source Code
-              </button>
+              <a 
+                href="http://localhost:3001" 
+                className="px-8 py-4 bg-gradient-to-r from-accent to-accent-hover text-white font-semibold rounded-xl hover:scale-105 transition-transform duration-300 flex items-center gap-2"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                </svg>
+                View Cart
+              </a>
               <button className="px-8 py-4 glass text-white font-semibold rounded-xl hover:bg-white/10 transition-colors">
                 Learn More
               </button>
@@ -235,7 +185,7 @@ export default function Home() {
               Featured <span className="gradient-text">Products</span>
             </h2>
             <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-              Interactive product cards showcasing modern design patterns and user interface elements
+              Handpicked products that combine innovation, quality, and style
             </p>
           </div>
 
@@ -248,8 +198,9 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Design Showcase */}
-      <DesignShowcase />
+
+
+
 
       {/* Footer */}
       <footer className="border-t border-card-border py-12">
