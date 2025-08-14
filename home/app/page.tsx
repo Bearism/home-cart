@@ -1,10 +1,14 @@
-import Image from "next/image";
+'use client';
 
-const products = [
+import Image from "next/image";
+import { useState, useEffect } from 'react';
+import { cartService, Product, Cart } from '../lib/cartService';
+
+const products: Product[] = [
   {
     id: 1,
     name: "Premium Wireless Headphones",
-    price: "$299.99",
+    price: 299.99,
     image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=300&fit=crop",
     category: "Audio",
     rating: 4.8,
@@ -14,7 +18,7 @@ const products = [
   {
     id: 2,
     name: "Smart Fitness Watch",
-    price: "$199.99",
+    price: 199.99,
     image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=300&fit=crop",
     category: "Wearables",
     rating: 4.6,
@@ -24,7 +28,7 @@ const products = [
   {
     id: 3,
     name: "Ultra HD Camera",
-    price: "$599.99",
+    price: 599.99,
     image: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=400&h=300&fit=crop",
     category: "Photography",
     rating: 4.9,
@@ -34,7 +38,7 @@ const products = [
   {
     id: 4,
     name: "Gaming Laptop Pro",
-    price: "$1,299.99",
+    price: 1299.99,
     image: "https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=400&h=300&fit=crop",
     category: "Computers",
     rating: 4.7,
@@ -44,7 +48,7 @@ const products = [
   {
     id: 5,
     name: "Wireless Earbuds",
-    price: "$149.99",
+    price: 149.99,
     image: "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=400&h=300&fit=crop",
     category: "Audio",
     rating: 4.5,
@@ -54,7 +58,7 @@ const products = [
   {
     id: 6,
     name: "Smart Home Hub",
-    price: "$89.99",
+    price: 89.99,
     image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop",
     category: "Smart Home",
     rating: 4.4,
@@ -81,7 +85,23 @@ const StarRating = ({ rating }: { rating: number }) => {
   );
 };
 
-const ProductCard = ({ product }: { product: typeof products[0] }) => {
+const ProductCard = ({ product, cart, onCartUpdate }: { 
+  product: Product; 
+  cart: Cart; 
+  onCartUpdate: (cart: Cart) => void;
+}) => {
+  const cartItem = cart.items.find((item: any) => item.id === product.id);
+
+  const handleAddToCart = async () => {
+    try {
+      console.log('Button clicked for product:', product.name);
+      const updatedCart = await cartService.addToCart(product);
+      onCartUpdate(updatedCart);
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+    }
+  };
+
   return (
     <div className="product-card group bg-card-bg border border-card-border rounded-2xl p-6 hover:border-accent/50 overflow-hidden relative">
       <div className="absolute inset-0 bg-gradient-to-br from-accent/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -99,6 +119,13 @@ const ProductCard = ({ product }: { product: typeof products[0] }) => {
             {product.category}
           </span>
         </div>
+        {cartItem && (
+          <div className="absolute top-3 right-3">
+            <span className="px-2 py-1 bg-accent text-white text-xs font-bold rounded-full">
+              {cartItem.quantity}
+            </span>
+          </div>
+        )}
       </div>
 
       <div className="relative z-10">
@@ -107,7 +134,7 @@ const ProductCard = ({ product }: { product: typeof products[0] }) => {
         </h3>
         
         <div className="flex items-center justify-between mb-3">
-          <span className="text-2xl font-bold gradient-text">{product.price}</span>
+          <span className="text-2xl font-bold gradient-text">${product.price.toFixed(2)}</span>
           <StarRating rating={product.rating} />
         </div>
         
@@ -117,16 +144,19 @@ const ProductCard = ({ product }: { product: typeof products[0] }) => {
 
         <div className="mb-4">
           <div className="flex flex-wrap gap-1">
-            {product.features.map((feature, index) => (
+            {product.features.map((feature: string, index: number) => (
               <span key={index} className="px-2 py-1 bg-accent/10 text-accent text-xs rounded-md">
                 {feature}
               </span>
             ))}
+            </div>
           </div>
-        </div>
         
-        <button className="w-full bg-gradient-to-r from-accent to-accent-hover hover:from-accent-hover hover:to-accent text-white font-medium py-3 px-4 rounded-xl transition-all duration-300 transform hover:scale-105 active:scale-95">
-          Add to Cart
+        <button 
+          onClick={handleAddToCart}
+          className="w-full bg-gradient-to-r from-accent to-accent-hover hover:from-accent-hover hover:to-accent text-white font-medium py-3 px-4 rounded-xl transition-all duration-300 transform hover:scale-105 active:scale-95"
+        >
+          {cartItem ? `Add Another (${cartItem.quantity})` : 'Add to Cart'}
         </button>
       </div>
     </div>
@@ -136,6 +166,27 @@ const ProductCard = ({ product }: { product: typeof products[0] }) => {
 
 
 export default function Home() {
+  const [cart, setCart] = useState<Cart>({ items: [], total: 0, itemCount: 0 });
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const loadCart = async () => {
+      try {
+        const cartData = await cartService.getCart();
+        setCart(cartData);
+      } catch (error) {
+        console.error('Error loading cart:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    loadCart();
+  }, []);
+
+  const handleCartUpdate = (updatedCart: Cart) => {
+    setCart(updatedCart);
+  };
+
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
@@ -161,12 +212,17 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a 
                 href="http://localhost:3001" 
-                className="px-8 py-4 bg-gradient-to-r from-accent to-accent-hover text-white font-semibold rounded-xl hover:scale-105 transition-transform duration-300 flex items-center gap-2"
+                className="px-8 py-4 bg-gradient-to-r from-accent to-accent-hover text-white font-semibold rounded-xl hover:scale-105 transition-transform duration-300 flex items-center gap-2 relative"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                 </svg>
                 View Cart
+                {cart.itemCount > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full h-6 w-6 flex items-center justify-center">
+                    {cart.itemCount}
+                  </span>
+                )}
               </a>
               <button className="px-8 py-4 glass text-white font-semibold rounded-xl hover:bg-white/10 transition-colors">
                 Learn More
@@ -192,7 +248,12 @@ export default function Home() {
           {/* Product grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {products.map((product) => (
-              <ProductCard key={product.id} product={product} />
+              <ProductCard 
+                key={product.id} 
+                product={product} 
+                cart={cart}
+                onCartUpdate={handleCartUpdate}
+              />
             ))}
           </div>
         </div>
